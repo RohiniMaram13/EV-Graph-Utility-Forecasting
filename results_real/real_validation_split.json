@@ -1,0 +1,21 @@
+{
+  "total_days": 670,
+  "train_days": 469,
+  "validation_days": 100,
+  "test_days": 101,
+  "train_hours": 11256,
+  "validation_hours": 2400,
+  "test_hours": 2424,
+  "lookback_hours": 168,
+  "forecast_horizon_hours": 24,
+  "forecast_stride_hours": 24,
+  "training_forecast_windows": 462,
+  "validation_forecast_windows": 100,
+  "test_forecast_windows": 101,
+  "n_nodes_all": 37,
+  "n_nodes_pod": 16,
+  "n_rsps_permutations": 100,
+  "n_saved_gnn_permutations": 20,
+  "permutation_seed": 777,
+  "ridge_alpha": 1.0
+}

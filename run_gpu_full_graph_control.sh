@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+python check_gpu.py
+python -m experiments_v2.run_full_graph_control \
+  --data-seed 42 \
+  --graph-seed 777 \
+  --device cuda \
+  --batch-size 4 \
+  --gru-epochs 100 \
+  --graph-epochs 30 \
+  --finetune-epochs 70 \
+  --patience 15 \
+  --graph-patience 10 \
+  --graph-lr 1e-3 \
+  --finetune-lr 5e-4 \
+  --perm-tries 64

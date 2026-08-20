@@ -1,0 +1,239 @@
+# ============================================================
+# The Spatial Illusion
+# Repository .gitignore
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Python
+# ------------------------------------------------------------
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+
+
+# ------------------------------------------------------------
+# Virtual environments
+# ------------------------------------------------------------
+
+.venv/
+venv/
+env/
+ENV/
+
+
+# ------------------------------------------------------------
+# IDE / editor files
+# ------------------------------------------------------------
+
+.vscode/
+.idea/
+
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+
+# ------------------------------------------------------------
+# Secrets / credentials
+# NEVER COMMIT THESE
+# ------------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+*.pem
+*.key
+*.crt
+
+credentials.json
+secrets.json
+token.json
+api_token.txt
+*_token.txt
+*_credentials.json
+
+
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+
+*.log
+logs/
+
+paper_experiments.log
+nohup.out
+
+
+# ------------------------------------------------------------
+# Temporary files
+# ------------------------------------------------------------
+
+tmp/
+temp/
+.cache/
+cache/
+
+*.tmp
+*.temp
+*.bak
+
+
+# ============================================================
+# ACN REAL-DATA PIPELINE
+# ============================================================
+
+# Raw ACN API/session downloads can be extremely large.
+# Do NOT commit the raw downloaded time-series/session JSON.
+#
+# Keep the small processed/reproducibility artifacts that are
+# required by the paper.
+
+data/real_acn/raw/
+data/real_acn/raw_data/
+data/real_acn/raw_sessions/
+data/real_acn/timeseries/
+data/real_acn/time_series/
+data/real_acn/downloads/
+
+data/real_acn/**/*.jsonl
+data/real_acn/**/*.json.gz
+
+# If individual raw session JSON files are stored in this folder,
+# uncomment the next line ONLY if JSON files there are exclusively raw:
+#
+# data/real_acn/*.json
+#
+# Do NOT blindly enable that rule if you want to keep:
+# caltech_pod_graph_metadata.json
+
+
+# ------------------------------------------------------------
+# Large intermediate arrays / temporary preprocessing artifacts
+# ------------------------------------------------------------
+
+data/real_acn/intermediate/
+data/real_acn/tmp/
+data/real_acn/cache/
+
+*.npy.tmp
+*.npz.tmp
+
+
+# ============================================================
+# MODEL CHECKPOINTS
+# ============================================================
+
+checkpoints/
+models/checkpoints/
+
+*.pt
+*.pth
+*.ckpt
+
+# HuggingFace / training cache if ever used
+wandb/
+runs/
+
+
+# ============================================================
+# EXPERIMENT TEMPORARY OUTPUTS
+# ============================================================
+
+experiments_v2/__pycache__/
+real_validation/__pycache__/
+
+results_v2/tmp/
+results_v2/cache/
+
+results_real/tmp/
+results_real/cache/
+
+
+# ------------------------------------------------------------
+# SLURM / HPC files
+# ------------------------------------------------------------
+
+slurm-*.out
+*.slurm.out
+
+
+# ------------------------------------------------------------
+# Jupyter
+# ------------------------------------------------------------
+
+.ipynb_checkpoints/
+
+
+# ------------------------------------------------------------
+# Profiling / debug outputs
+# ------------------------------------------------------------
+
+*.prof
+*.trace
+*.dump
+
+
+# ============================================================
+# IMPORTANT:
+# DO NOT IGNORE FINAL PAPER REPRODUCIBILITY RESULTS
+# ============================================================
+
+# The following files/directories are intentionally NOT ignored:
+#
+# results_v2/
+# results_real/
+#
+# Final CSV/JSON summaries used by the paper should remain
+# version-controlled when reasonably small.
+#
+# Examples:
+#
+# results_v2/paper_all_runs_gs777.csv
+# results_v2/paper_scenario_summary_gs777.csv
+# results_v2/paper_main_table_gs777.csv
+# results_v2/paper_association_by_data_seed_gs777.csv
+# results_v2/paper_association_pooled_gs777.csv
+#
+# results_real/real_rsps_summary.csv
+# results_real/real_gnn_final_summary.csv
+# results_real/real_gnn_seed_summary.csv
+# results_real/real_gnn_permutation_runs.csv
+# results_real/real_validation_split.json
+
+
+# ============================================================
+# IMPORTANT:
+# DO NOT IGNORE SMALL PREPARED CALTECH REPRODUCIBILITY FILES
+# ============================================================
+
+# These should remain trackable if redistribution is permitted:
+#
+# data/real_acn/caltech_hourly_energy.csv
+# data/real_acn/caltech_hourly_energy.npz
+# data/real_acn/caltech_pod_adjacency.npy
+# data/real_acn/caltech_pod_edges.csv
+# data/real_acn/caltech_pod_graph_metadata.json
+# data/real_acn/caltech_selected_stations.csv
+# data/real_acn/caltech_station_mapping.csv
+#
+# Whether caltech_selected_sessions.csv should be committed depends
+# on its size and the ACN dataset redistribution terms.

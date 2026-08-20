@@ -1,0 +1,21 @@
+{
+  "n_nodes": 37,
+  "n_edges_undirected": 56,
+  "nodes_with_pod_neighbors": 16,
+  "isolated_nodes": 21,
+  "included_constraints": [
+    "CC Pod",
+    "AV Pod"
+  ],
+  "excluded_constraints": [
+    "Secondary A",
+    "Secondary B",
+    "Secondary C",
+    "Primary A",
+    "Primary B",
+    "Primary C"
+  ],
+  "graph_rule": "Undirected clique edges between selected EVSEs sharing an explicit ACN-Sim CC Pod or AV Pod constraint.",
+  "self_loops_saved": false,
+  "adjacency_order": "node_id order from caltech_station_mapping.csv"
+}

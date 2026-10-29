@@ -133,6 +133,7 @@ data/real_acn/**/*.json.gz
 data/real_acn/intermediate/
 data/real_acn/tmp/
 data/real_acn/cache/
+/data/real_acn/timeseries_sessions/
 
 *.npy.tmp
 *.npz.tmp

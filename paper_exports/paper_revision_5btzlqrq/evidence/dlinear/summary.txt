@@ -1,0 +1,5 @@
+DLinear: mean and sample standard deviation across three seeds
+           mae      rmse      nmae        r2  peak_mae  offpeak_mae
+mean  0.357444  0.817999  1.963314  0.079390  0.914514     0.171754
+std   0.004120  0.000891  0.022629  0.002005  0.015523     0.009697
+Total minutes: 0.11

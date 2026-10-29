@@ -1,0 +1,12 @@
+experiment,seed,gain_pct
+Caltech: original GNN,42,0.0853000697593241
+Caltech: original GNN,52,4.085683947017859
+Caltech: original GNN,62,-0.5651448520523997
+Caltech: original GNN,72,-0.3495424177689083
+Caltech: original GNN,82,-0.1086338659293001
+Caltech: adapted STGCN,42,-5.65463608063755
+Caltech: adapted STGCN,52,2.659984242942582
+Caltech: adapted STGCN,62,2.653324366103773
+UrbanEV: geographic GNN,42,0.1116508874484311
+UrbanEV: geographic GNN,52,0.0304116255825848
+UrbanEV: geographic GNN,62,0.0078060268463792

@@ -1,99 +1,128 @@
 # The Spatial Illusion: Beyond Correlation in GNN-Based EV Forecasting
 
-
-> **The Spatial Illusion: Beyond Correlation in GNN-Based EV Forecasting**
-
 ## Overview
 
-This repository studies a specific attribution question in graph-based EV charging forecasting:
+This repository studies whether a proposed graph's **specific alignment with node histories** contributes to EV charging forecasts. An improvement from adding a graph branch does not, by itself, establish that the proposed connections are responsible.
 
-> **Does a proposed graph contain predictive information beyond what is already available from each node's temporal history?**
+The evaluation combines:
 
-The work combines two complementary evaluations:
+- **Topology-preserving node permutations:** compare aligned and shuffled graphs while retaining graph topology and the degree distribution. Individual named nodes may receive different degrees after permutation.
+- **Matched training controls:** compare the temporal baseline, its fine-tuned counterpart, and graph branches initialized from the same temporal checkpoint.
+- **Residual Spatial Predictability Score (RSPS):** a lightweight, linear, single-lag diagnostic of whether neighboring residuals improve next-day residual prediction beyond the node's own lag.
 
-1. **Controlled Washington benchmark** — a 581-node benchmark in which lagged graph coupling is known and manipulated by construction.
-2. **Observed Caltech ACN validation** — a real charging-data experiment using measured sessions from the Caltech Adaptive Charging Network and a physical electrical-pod graph.
+The evidence covers a controlled synthetic Washington benchmark, observed Caltech ACN charging data with an electrical pod graph, and published UrbanEV regional data with a geographic graph. UrbanEV's charging-volume target is **estimated energy**, not directly metered energy.
 
-The paper does not assume that high spatial correlation implies that a graph is useful. Instead, it evaluates whether the **specific node-to-graph alignment** matters.
+RSPS is a complementary diagnostic, not a replacement for direct forecasting controls. It tracked alignment benefits strongly across controlled benchmark conditions, but did not meaningfully rank neural performance across UrbanEV graph permutations.
 
-Two ideas are central:
+## Experiment status and provenance
 
-- **Residual Spatial Predictability Score (RSPS)**: tests whether lagged neighbor residuals improve next-day residual prediction beyond self-history.
-- **Topology-preserving node permutations**: preserve graph topology and degree distribution while breaking node alignment, allowing graph-specific value to be separated from generic graph-model effects.
+The original Washington and three-seed Caltech results are preserved. Camera-ready revision experiments are stored separately in `revision_runs/`.
+
+| Experiment | Status | Evidence |
+|---|---|---|
+| Original Washington benchmark | Existing results retained | `results_v2/` |
+| Original Caltech experiment, seeds 42/52/62 | Existing results retained | `results_real/` |
+| Caltech weekly seasonal naive | Completed | `revision_runs/seasonal_naive_*/` |
+| Caltech shared-channel DLinear, three seeds | Completed | `revision_runs/dlinear_*/` |
+| Additional Caltech seeds 72/82 | Completed; five-seed summary available | `revision_runs/caltech_extra_seeds_*/` |
+| Adapted STGCN, three seeds and 20 permutations per seed | Completed | `revision_runs/stgcn_full_*/` |
+| UrbanEV geographic graph, three seeds and 20 permutations per seed | Completed | `revision_runs/urbanev_full_*/` |
+| UrbanEV RSPS on the same 20 permutations | Completed | `revision_runs/urbanev_rsps_*/` |
+| Revision figures and paper handoff package | Export script supplied; generation/visual review pending confirmation | `paper_exports/` |
+| Manuscript integration of the new experiments | Pending | Update tables, claims, limitations, and reviewer responses |
+
+Revision numbers below are rounded from completed Ubuntu run summaries supplied by the researcher. Full-precision CSVs, protocols, and available prediction/checkpoint artifacts in the run folders are the authoritative evidence. Not every runner saves final model checkpoints or neural predictions; preserve the complete outputs it does produce.
 
 ## Main findings
 
-### Controlled benchmark
+### Controlled Washington benchmark — original experiments
 
-The controlled benchmark varies:
+The benchmark uses 581 geographic units with synthetic hourly charging trajectories. It varies true lagged spatial coupling and contemporaneous shared shocks independently.
 
-```text
-True coupling:
-c = 0.00, 0.25, 0.50, 0.75, 1.00
+- At zero coupling, GEO-GNN and PERM-GNN are approximately indistinguishable, despite GEO-GNN improving over GRU-FT.
+- Greater true coupling generally produces a larger alignment advantage within the tested generator. This is not a claim of strict monotonicity in every run.
+- Shared shocks can produce high raw neighbor correlation without a comparable graph-alignment advantage.
+- Across nine pooled conditions, the original reported correlations with forecasting alignment advantage are **0.968 for RSPS alignment** and **0.791 for raw-correlation alignment**.
 
-False-signal shared shock:
-sigma_g = 0.05, 0.10, 0.15, 0.20
-with c = 0
-```
+These controlled correlations concern variation across benchmark conditions. They are not the same analysis as the within-dataset UrbanEV graph-permutation correlation reported below.
 
-Across three data seeds and three training seeds:
+### Caltech — original three-seed results
 
-- At zero coupling, GEO-GNN and PERM-GNN are approximately indistinguishable.
-- As true coupling increases, GEO-GNN increasingly separates from PERM-GNN.
-- Under false-signal conditions, raw neighbor correlation can become very high while graph-alignment advantage stays near zero.
-- Across the nine pooled conditions:
+The original results use seeds **42, 52, 62**, with 20 permuted graphs per seed.
 
-```text
-RSPS-alignment vs graph-specific forecasting advantage:
-r = 0.968
+| Measure | Original mean ± sample SD |
+|---|---:|
+| GRU-FT MAE | 0.3440348 ± 0.0043554 |
+| Real pod-GNN MAE | 0.3430297 ± 0.0016157 |
+| Real gain over GRU-FT | +0.2845% ± 0.9551% |
+| Real gain over mean permuted graph | +1.2019% ± 2.5185% |
+| Mean percentage of permutations beaten | 65.0% |
+| Final graph gate | 0.01797 ± 0.01575 |
 
-Raw-correlation alignment vs graph-specific forecasting advantage:
-r = 0.791
-```
+### Caltech — added camera-ready evidence
 
-### Caltech ACN validation
+The original model was extended to seeds **42, 52, 62, 72, 82** by running only the two additional seeds. The combined five-seed summary mixes original and newly executed runs; retain their separate provenance and record environment differences.
 
-The real-data experiment uses:
+| Measure | Five-seed mean ± sample SD |
+|---|---:|
+| GRU-FT MAE | 0.346089 ± 0.006573 |
+| Real pod-GNN MAE | 0.338716 ± 0.008242 |
+| Real pod-GNN RMSE | 0.806499 ± 0.003083 |
+| Real gain over GRU-FT | +2.112172% ± 2.602249% |
+| Real gain over mean permuted graph | +0.629533% ± 1.947556% |
+| Percentage of permutations beaten | 54.000000% ± 24.596748% |
 
-```text
-Downloaded Caltech sessions:       31,424
-Selected EVSEs:                    37
-Selected sessions:                 24,985
-Usable measured-current sessions:  24,251
-Hourly observations:               16,080
-Pod-connected EVSEs:               16
-Physical pod edges:                56
-Training seeds:                    42, 52, 62
-Neural graph permutations / seed:  20
-```
+Additional forecasting baselines use the same Caltech test targets:
 
-The real graph shows weak graph-specific predictive value:
+| Model | Seeds | Test MAE | Test RMSE |
+|---|---:|---:|---:|
+| Weekly seasonal naive | Deterministic | **0.304991** | 1.122903 |
+| Shared-channel DLinear | 3 | 0.357444 ± 0.004120 | 0.817999 ± 0.000891 |
+| Real pod-GNN, five-seed extension | 5 | 0.338716 ± 0.008242 | **0.806499 ± 0.003083** |
+| Adapted STGCN with aligned pod graph | 3 | 0.331638 ± 0.016670 | 0.806595 ± 0.001282 |
 
-```text
-GRU-FT MAE:
-0.3440348 +/- 0.0043554
+Bold entries mark the lowest reported mean in each metric column, not statistically established superiority. Seed counts differ. Weekly seasonal naive has lower MAE than these neural models, while neural models have lower RMSE. The paper must not claim universal forecasting superiority.
 
-Real Pod-GNN MAE:
-0.3430297 +/- 0.0016157
+For adapted STGCN, alignment gains over the mean shuffled graph were approximately **−5.655%, +2.660%, and +2.653%** for seeds 42, 52, and 62. The mean is **−0.113776% ± 4.798527%**: alignment benefits vary substantially across seeds.
 
-Real gain over GRU-FT:
-+0.2845% +/- 0.9551%
+### UrbanEV — observed geographic validation
 
-Real vs mean topology-matched permutation:
-+1.2019% +/- 2.5185%
+The geographic GNN uses the original matched GRU/graph-branch protocol on 275 regions. Its graph is the symmetric union of five-nearest-neighbor connections from the published distance matrix.
 
-Mean permutations beaten:
-65.0%
+| Measure | Three-seed mean ± sample SD |
+|---|---:|
+| GRU-FT MAE | 72.579956 ± 0.775026 |
+| Geographic GNN MAE | 72.451553 ± 0.750757 |
+| Geographic GNN RMSE | 291.351359 ± 3.049993 |
+| Mean permuted-GNN MAE | 72.487692 ± 0.739126 |
+| Geographic gain over GRU-FT | +0.176646% ± 0.110586% |
+| Geographic gain over mean permuted graph | +0.049956% ± 0.054612% |
 
-Final graph gate:
-0.01797 +/- 0.01575
-```
+The aligned geographic graph has a small positive advantage in each seed: approximately **+0.112%, +0.030%, and +0.008%**. This is not zero benefit, but neither its practical importance nor statistical significance should be overstated.
 
-The paper therefore does **not** claim a large real-world GNN gain. The conclusion is that a physically meaningful graph can still have only weak predictive value for a particular forecasting task and horizon.
+MAE and RMSE here refer to the published regional estimated-energy target. Their absolute values should not be compared directly with per-EVSE Caltech errors.
 
----
+### UrbanEV — RSPS extension and its limitation
+
+The extension reuses the exact graph and 20 permutations from the completed neural experiment. It fits the original linear, single-lag diagnostic on training days and evaluates it on validation days.
+
+| Diagnostic | Value |
+|---|---:|
+| Aligned RSPS | 0.03105048 |
+| Mean shuffled RSPS | 0.02974016 |
+| RSPS alignment difference | +0.00131032 |
+| Shuffled scores exceeded by aligned RSPS | 14 / 20 |
+| Exploratory Pearson correlation: RSPS vs mean neural test MAE across 21 graphs | −0.042642 |
+
+The positive diagnostic alignment difference agrees in direction with the small positive neural alignment gain. However, the near-zero correlation does **not** demonstrate useful linear ranking of neural forecasting performance by RSPS in this setting.
+
+RSPS is a dimensionless reduction in validation residual MSE. Its value of 0.03105048 corresponds to a 3.105048% reduction relative to the own-lag diagnostic, not a 3.105048% improvement in neural forecasting. The aligned-versus-shuffled RSPS difference is 0.131032 percentage points of residual-MSE reduction.
+
+This was a retrospective extension with fixed diagnostic settings. Graphs share data and topology; the correlation is descriptive, not an independent-sample significance test or a general validation across datasets.
 
 ## Repository layout
+
+Place the supplied standalone revision scripts at the repository root before using the commands below.
 
 ```text
 .
@@ -101,321 +130,101 @@ The paper therefore does **not** claim a large real-world GNN gain. The conclusi
 ├── requirements.txt
 ├── setup_linux_gpu.sh
 ├── check_gpu.py
-│
+├── experiments_v2/                # Original controlled benchmark and model code
+├── real_validation/               # Original ACN preparation and evaluation
 ├── data/
-│   ├── README.md
-│   ├── processed/
 │   ├── processed_v2/
-│   └── real_acn/
-│       ├── README.md
-│       ├── caltech_hourly_energy.csv
-│       ├── caltech_hourly_energy.npz
-│       ├── caltech_pod_adjacency.npy
-│       ├── caltech_pod_edges.csv
-│       ├── caltech_pod_graph_metadata.json
-│       ├── caltech_selected_sessions.csv
-│       ├── caltech_selected_stations.csv
-│       ├── caltech_station_mapping.csv
-│       └── ...
-│
-├── experiments_v2/
-│   ├── README.md
-│   ├── config.py
-│   ├── data.py
-│   ├── generator.py
-│   ├── graphs.py
-│   ├── models.py
-│   ├── train_eval.py
-│   ├── metrics.py
-│   ├── novelty_diagnostics.py
-│   ├── run_full_graph_control.py
-│   ├── aggregate_paper_results.py
-│   └── make_paper_figures.py
-│
-├── real_validation/
-│   ├── README.md
-│   ├── test_acn.py
-│   ├── inspect_acn.py
-│   ├── inspect_timeline.py
-│   ├── select_real_dataset.py
-│   ├── download_selected_timeseries.py
-│   ├── build_hourly_matrix.py
-│   ├── build_station_mapping.py
-│   ├── build_real_graph.py
-│   ├── prepare_real_validation.py
-│   └── run_real_graph_validation.py
-│
-├── results_v2/
-│   └── controlled-paper outputs
-│
-├── results_real/
-│   ├── README.md
-│   └── real-data outputs
-│
-└── scripts/
-    ├── README.md
-    ├── run_all_paper_experiments.sh
-    └── make_paper_figures.sh
+│   └── real_acn/                   # Prepared ACN inputs and local raw downloads
+├── results_v2/                    # Original Washington results
+├── results_real/                  # Original Caltech results and frozen controls
+├── scripts/                       # Original reproduction/figure scripts
+├── run_seasonal_naive.py
+├── run_dlinear.py
+├── run_additional_caltech_seeds.py
+├── run_stgcn.py
+├── download_urbanev.py
+├── run_urbanev.py
+├── run_urbanev_rsps.py
+├── export_paper_results.py
+├── revision_inputs/               # Versioned UrbanEV snapshots and manifests
+├── revision_runs/                 # Separately named revision experiment outputs
+└── paper_exports/                 # Generated figure/table handoff packages
 ```
 
----
+Run suffixes are generated automatically. The scripts retain existing outputs and create new revision directories. Where a script expects exactly one completed run and finds several, select the intended run explicitly when its CLI supports that option; do not delete runs simply to satisfy discovery.
 
-## Environment setup
+## Environment
 
-The final experiments were run on Linux with a CUDA-enabled NVIDIA GPU.
-
-The tested environment included:
+The Ubuntu revision runs reported:
 
 ```text
-PyTorch: 2.11.0
-CUDA: 12.8
+Python: 3.12 environment
+PyTorch: 2.11.0+cu128
+CUDA runtime: 12.8
 GPU: NVIDIA GeForce RTX 5090
 ```
 
-Recommended setup:
+CUDA tensor operations and graph-convolution forward/backward checks passed. Hardware and software differences can change numerical results.
+
+For an existing configured environment:
+
+```bash
+source .venv/bin/activate
+python check_gpu.py
+```
+
+For a fresh installation, inspect and use the repository setup script:
 
 ```bash
 chmod +x setup_linux_gpu.sh
 ./setup_linux_gpu.sh
 ```
 
-If a local virtual environment is created:
+## Original experiments
 
-```bash
-source .venv/bin/activate
-```
-
-Verify the GPU:
-
-```bash
-python check_gpu.py
-```
-
-Small numerical differences may occur across hardware, CUDA versions, and PyTorch versions.
-
----
-
-## End-to-end paper reproduction
-
-The primary top-level reproduction command is:
+The original paper reproduction script is:
 
 ```bash
 chmod +x scripts/run_all_paper_experiments.sh
 ./scripts/run_all_paper_experiments.sh
 ```
 
-Use the checked-in script rather than manually changing paper parameters if the goal is to reproduce the frozen manuscript results.
+This is the **original** experiment pipeline, not a wrapper for the standalone camera-ready additions. Original runners can write to the original result directories; preserve their existing evidence before deliberate reproduction. No original experiments need to be rerun merely to generate revision figures.
 
----
+### Washington benchmark protocol
 
-# Controlled Washington benchmark
+Washington geographic units, coordinates, and EV-registration-derived scale information provide context; hourly charging trajectories are synthetic.
 
-## What is observed and what is synthetic
+| Setting | Value |
+|---|---|
+| Nodes / duration | 581 / 365 days |
+| Lookback / horizon / stride | 168 / 24 / 24 hours |
+| Train / validation / test | 250 / 50 / 65 days |
+| Train / validation / test windows | 243 / 50 / 65 |
+| Data seeds / training seeds | 42, 52, 62 / 42, 52, 62 |
+| Coupling levels | 0, 0.25, 0.50, 0.75, 1.00 |
+| Shared-shock strengths at zero coupling | 0.05, 0.10, 0.15, 0.20 |
+| Geographic graph | Symmetric 6-nearest-neighbor graph |
+| Undirected edges | 2,179 |
+| Median edge distance | 12.54 km |
+| Frozen graph seed | 777 |
 
-The controlled benchmark uses real Washington geographic units, coordinates, and EV-registration-derived scale information.
+With row-normalized adjacency `W`, the controlled mechanism is:
 
-The **hourly charging trajectories are synthetic**.
+```text
+s_k = 0.70 * [(1-c) s_(k-1) + c W s_(k-1)] + eta_k
+```
 
-This distinction is intentional because the benchmark requires known ground truth about whether lagged graph-linked predictive dependence exists.
+Shared shocks increase contemporaneous similarity without deliberately introducing this lagged spatial mechanism. The original approximate GEO-versus-PERM advantages are −0.01% at zero coupling and +4.92% at maximum coupling; corresponding gains over GRU-FT are +3.78% and +11.25%.
 
-Generator:
+Relevant files:
 
 ```text
 experiments_v2/generator.py
-```
-
-Graph construction:
-
-```text
 experiments_v2/graphs.py
-```
-
-### Frozen setup
-
-```text
-Nodes:                    581
-Duration:                 365 days
-Hourly observations:      8,760 per node
-Lookback:                 168 hours
-Forecast horizon:         24 hours
-Window stride:            24 hours
-
-Training:                 250 days
-Validation:                50 days
-Test:                      65 days
-
-Training windows:         243
-Validation windows:        50
-Test windows:              65
-
-Data seeds:               42, 52, 62
-Training seeds:           42, 52, 62
-```
-
-### Controlled latent-state mechanism
-
-Let `W` be the row-normalized geographic adjacency:
-
-```text
-s_k = phi [(1-c)s_(k-1) + c W s_(k-1)] + eta_k
-```
-
-with:
-
-```text
-phi = 0.70
-```
-
-At `c = 0`, persistence is local. As `c` increases, lagged geographic-neighbor state contributes more strongly.
-
-### False-signal construction
-
-The false-signal experiment adds:
-
-```text
-g_k ~ Normal(0, sigma_g^2)
-```
-
-to all nodes while fixing coupling to zero.
-
-This increases contemporaneous similarity without deliberately creating the same lagged neighbor-predictive mechanism.
-
-### Geographic graph
-
-```text
-Symmetric geographic k-NN
-k = 6
-Nodes = 581
-Undirected edges = 2,179
-Directed message-passing edges = 4,358
-Median edge distance = 12.54 km
-```
-
-The matched permuted graph preserves topology and node degree while breaking geographic alignment.
-
-Frozen graph seed:
-
-```text
-777
-```
-
-Approximate undirected edge overlap with the aligned graph:
-
-```text
-0.78%
-```
-
-### RSPS
-
-Implemented in:
-
-```text
 experiments_v2/novelty_diagnostics.py
-```
-
-Weekly residual:
-
-```text
-r[i,k] = z[i,k] - z[i,k-7]
-```
-
-Lagged neighbor residual:
-
-```text
-n[i,k-1] = sum_j W[i,j] r[j,k-1]
-```
-
-Ridge configuration:
-
-```text
-Ridge(alpha=1.0, fit_intercept=True)
-```
-
-RSPS:
-
-```text
-RSPS = (MSE_self - MSE_spatial) / MSE_self
-```
-
-RSPS is a predictive diagnostic, not a causal estimator.
-
-### Forecasting models
-
-Implemented in:
-
-```text
 experiments_v2/models.py
-```
-
-The temporal model is `GRUForecast`.
-
-The graph model is `GRUGCNForecast`, which preserves the local GRU representation and adds:
-
-```text
-h_fused = h_local + gate * h_spatial
-```
-
-The graph gate begins near zero:
-
-```text
-graph_gate_logit = -5.0
-sigmoid(-5) ~= 0.0067
-```
-
-### Matched training
-
-Main runner:
-
-```text
 experiments_v2/run_full_graph_control.py
-```
-
-Branches:
-
-```text
-A. Shared GRU baseline
-B. GRU-FT
-C. GEO-GNN
-D. PERM-GNN
-```
-
-Frozen training settings:
-
-```text
-Baseline epochs:           up to 100
-Graph-only epochs:         up to 30
-Joint fine-tune epochs:    up to 70
-Baseline LR:               1e-3
-Graph-stage LR:            1e-3
-Fine-tune LR:              5e-4
-Weight decay:              1e-4
-Gradient clipping:         1.0
-Batch size:                4
-```
-
-Inspect individual CLI options:
-
-```bash
-python -m experiments_v2.run_full_graph_control --help
-```
-
-For exact paper reproduction, prefer:
-
-```bash
-./scripts/run_all_paper_experiments.sh
-```
-
-### Controlled output files
-
-Final controlled outputs are stored under:
-
-```text
-results_v2/
-```
-
-Important files include:
-
-```text
 results_v2/paper_all_runs_gs777.csv
 results_v2/paper_scenario_summary_gs777.csv
 results_v2/paper_main_table_gs777.csv
@@ -423,105 +232,159 @@ results_v2/paper_association_by_data_seed_gs777.csv
 results_v2/paper_association_pooled_gs777.csv
 ```
 
-### Expected qualitative controlled result
+### Caltech inputs and protocol
+
+The original data preparation reports 31,424 downloaded sessions, 24,985 selected sessions, 24,251 usable measured-current sessions, and 37 selected EVSEs. The primary neural analysis uses the **16 pod-connected EVSEs**, with 56 undirected edges forming two eight-node cliques. The other 21 selected EVSEs are isolated in the pod graph.
+
+| Split | Dates, UTC | Forecast windows |
+|---|---|---:|
+| Train | 2018-05-01 to 2019-08-12 | 462 |
+| Validation | 2019-08-13 to 2019-11-20 | 100 |
+| Test | 2019-11-21 to 2020-02-29 | 101 |
+
+There are 16,080 hourly observations. Models use 168 hours of history to predict 24 hours, with daily forecast origins and normalization fitted only on training data. Earlier observations from a validation/test period can serve as history at later forecast origins.
+
+Use the existing prepared hourly matrix, adjacency, and station mapping for the revision scripts. The original raw-data pipeline is documented under `real_validation/` and `data/real_acn/`. Rebuilding raw ACN inputs is not required for these additions; independently verify timestamp units and preprocessing equivalence if rebuilding with a different pandas version.
+
+### Matched GRU/graph training
+
+The graph model preserves the local temporal representation:
 
 ```text
-At c = 0:
-GEO approximately equals PERM
-
-As true coupling increases:
-GEO increasingly separates from PERM
-
-As shared-shock strength increases:
-raw correlation rises strongly
-
-Under false signal:
-GEO does not develop a comparable alignment advantage
+h_fused = h_local + sigmoid(graph_gate_logit) * h_spatial
+graph_gate_logit initially = -5.0
 ```
 
-Key pooled values:
+The original matched protocol uses a shared GRU checkpoint, up to 100 baseline epochs, 30 graph-only epochs, and 70 joint fine-tuning epochs. Learning rates are 0.001 for baseline/graph stages and 0.0005 for fine-tuning. Batch size is four, weight decay is 0.0001, and gradient clipping is 1.0. Checkpoint selection uses validation loss. The temporal fine-tuning and graph branches retain eligible incoming checkpoints.
 
-```text
-RSPS alignment vs GEO-vs-PERM:
-r = 0.968
+## Reproduce the camera-ready additions
 
-Raw-correlation alignment vs GEO-vs-PERM:
-r = 0.791
-```
+All commands below run from the repository root with the configured environment active. Completed runs need not be repeated to export figures.
 
-At maximum coupling:
-
-```text
-GEO gain over GRU-FT ≈ +11.25%
-GEO vs PERM ≈ +4.92%
-```
-
-At zero coupling:
-
-```text
-GEO gain over GRU-FT ≈ +3.78%
-GEO vs PERM ≈ -0.01%
-```
-
----
-
-# Caltech ACN validation
-
-Detailed documentation is in:
-
-```text
-data/real_acn/README.md
-real_validation/README.md
-results_real/README.md
-```
-
-The exact ordered pipeline is:
+### Caltech baselines and extra seeds
 
 ```bash
-python real_validation/test_acn.py
-python real_validation/inspect_acn.py
-python real_validation/inspect_timeline.py
-python real_validation/select_real_dataset.py
-python real_validation/download_selected_timeseries.py
-python real_validation/build_hourly_matrix.py
-python real_validation/build_station_mapping.py
-python real_validation/build_real_graph.py
-python real_validation/prepare_real_validation.py
-python -m real_validation.run_real_graph_validation --n-permutations 20 --verbose
+python -u run_seasonal_naive.py
+python -u run_dlinear.py
+python -u run_additional_caltech_seeds.py
 ```
 
----
+- Weekly seasonal naive predicts the corresponding hour one week earlier and requires no training.
+- DLinear uses a 25-hour endpoint-padded moving average and separate shared-channel trend/residual projections from 168 to 24 hours. Seeds are 42/52/62, with up to 100 epochs and validation early stopping. This is a tested configuration, not a claim about every DLinear variant.
+- The additional-seeds script runs **only 72 and 82**, with the original 20 frozen permutations, then combines them with the original three-seed CSV in a separate output directory.
 
-## Paper figures
+### Additional STGNN architecture
 
-Generate figures with:
+For a fresh implementation/environment check:
+
+```bash
+python -u run_stgcn.py --smoke
+```
+
+For the reportable experiment:
+
+```bash
+python -u run_stgcn.py
+```
+
+The implementation follows the [original STGCN architecture](https://github.com/VeritasYin/STGCN_IJCAI-18), with Chebyshev spatial convolutions and temporal convolution blocks. It adapts the head to direct 24-hour output and uses the repository's training protocol; it is not an exact replication of the original STGCN paper's training setup. It has 5,312,832 parameters.
+
+Aligned and permuted treatments within each seed share initial learned parameters and training budgets. Unlike the original residual GRU-GCN model, STGCN does not use a GRU warm start. The full run includes three seeds and 20 permutations per seed. The mathematical consistency check uses double precision; actual training retains float32/AMP settings.
+
+### UrbanEV download and geographic evaluation
+
+Dataset source: [UrbanEV](https://github.com/IntelligentSystemsLab/UrbanEV), published under CC0. Cite [Li et al., Scientific Data (2025)](https://doi.org/10.1038/s41597-025-04874-4) when using the dataset.
+
+The completed experiments used source commit:
+
+```text
+44f2aa0c8d89f192bce00bafb0def74a21b39c68
+```
+
+For initial acquisition:
+
+```bash
+python -u download_urbanev.py
+```
+
+The downloader resolves the current source commit and records it; it does not guarantee the same revision on future runs. Preserve the completed experiment's snapshot and checksum manifest for exact reproduction. If multiple snapshots exist, pass the intended one with `--snapshot PATH`.
+
+```bash
+python -u run_urbanev.py --smoke
+python -u run_urbanev.py
+```
+
+| Setting | Frozen revision protocol |
+|---|---|
+| Target | Published `volume.csv`, estimated regional energy |
+| Nodes / observations | 275 regions / 4,344 hourly observations |
+| Training | 2022-09-01 to 2023-01-04: 126 days, 119 forecast windows |
+| Validation | 2023-01-05 to 2023-01-31: 27 days/windows |
+| Test | 2023-02-01 to 2023-02-28: 28 days/windows |
+| Lookback / horizon / stride | 168 / 24 / 24 hours |
+| Graph | Binary symmetric union of five nearest neighbors from published distances |
+| Graph size | 843 undirected edges; degrees 5–10 |
+| Training seeds | 42, 52, 62 |
+| Permutations | 20 per seed; permutation RNG seed 20261029 |
+
+All 275 published regions are retained. Graph construction does not use charging targets. The split and graph rule were recorded before the new neural evaluation. Timestamps remain in their published form and are not converted to UTC.
+
+Important limitations:
+
+- The target is estimated rather than directly metered energy.
+- Published preprocessing includes bidirectional imputation and precedes our train/validation/test split. This is not an independently leakage-audited raw-data evaluation.
+- The distance matrix has labeled columns but no explicit row IDs. Row order is assumed to follow published column order; order, symmetry, and zero diagonal are checked, but these checks cannot independently prove the geographic mapping.
+- The evaluation includes only 28 daily test windows and three training seeds.
+
+### UrbanEV RSPS
+
+After the full geographic experiment:
+
+```bash
+python -u run_urbanev_rsps.py
+```
+
+If needed, select artifacts explicitly:
+
+```bash
+python -u run_urbanev_rsps.py --neural-run /path/to/urbanev_full_RUN --snapshot /path/to/urbanev_SNAPSHOT
+```
+
+This uses daily energy totals, training-only daily normalization, weekly differencing, and pooled ridge regression with alpha 1.0 and an unpenalized intercept:
+
+```text
+self predictor:    r[i,k-1]
+spatial predictors: r[i,k-1], sum_j W[i,j] r[j,k-1]
+RSPS = (MSE_self - MSE_spatial) / (MSE_self + 1e-12)
+```
+
+Training target days are 8–125 and validation target days are 126–152, using zero-based day indices. No test target values enter RSPS fitting or scoring. The saved neural test errors are used only in the retrospective comparison. No neural retraining or GPU is required.
+
+## Figures and paper handoff
+
+Original figures:
 
 ```bash
 chmod +x scripts/make_paper_figures.sh
 ./scripts/make_paper_figures.sh
 ```
 
-Figures should be generated from result files rather than manually edited.
+New revision figures and result package:
 
----
+```bash
+python -u export_paper_results.py
+```
 
-## Interpretation rules
+The revision export creates PDF/PNG/SVG figures, comparison tables, small evidence files, and a ZIP under `paper_exports/`. It reads full-precision CSVs rather than rounded console logs. It does not rerun training or edit the manuscript. Visually inspect exported figures before inserting them into LaTeX.
 
-This repository does **not** claim:
+Error bars represent sample standard deviations across seeds, not confidence intervals. Alignment panels use separate y-axis scales; disclose this in captions. Figure captions belong in LaTeX. Keep the original Washington figures alongside the new revision figures.
 
-- that high spatial correlation proves graph utility;
-- that RSPS is causal;
-- that geographic KNN is universally appropriate;
-- that every physical electrical relationship should become a GNN edge;
-- that the Caltech physical graph provides a large forecasting gain;
-- or that a universal RSPS threshold determines whether a graph should be used.
+The package excludes raw/input data, large prediction arrays, and model checkpoints. It is a handoff package, **not a complete backup**.
 
-The controlled benchmark establishes mechanism-level behavior.
+## Version control and local backups
 
-The Caltech experiment provides observed-data validation and produces a weaker, more cautious result.
+Keep scripts, manuscript sources, final CSVs, JSON protocols/manifests, text summaries, and small frozen graph/permutation artifacts trackable. Do not ignore the entire `revision_runs/` directory.
 
----
+Large raw downloads, prediction tensors, model checkpoints, virtual environments, caches, and smoke-test outputs may be excluded from Git, but should remain in separate backups when needed for reproducibility. `.gitignore` does not remove already tracked files or old history.
 
-
----
-
+The raw ACN `timeseries_sessions/` filenames in the existing repository history include characters incompatible with Windows checkout. Ignoring the folder does not repair that history. Preserve the Ubuntu copy or a suitable archive when transferring those raw files.

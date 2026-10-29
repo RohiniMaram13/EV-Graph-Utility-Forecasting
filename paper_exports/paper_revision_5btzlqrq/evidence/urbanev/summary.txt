@@ -1,0 +1,5 @@
+FULL URBANEV GEOGRAPHIC RESULTS
+      gru_ft_mae  geographic_mae  geographic_rmse  perm_mae_mean  gain_over_gru_ft_pct  alignment_gain_pct  permutations_beaten_pct
+mean   72.579956       72.451553       291.351359      72.487692              0.176646            0.049956                68.333333
+std     0.775026        0.750757         3.049993       0.739126              0.110586            0.054612                12.583057
+Total minutes: 5.37

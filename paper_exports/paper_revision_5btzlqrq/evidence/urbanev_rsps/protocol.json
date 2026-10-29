@@ -1,0 +1,26 @@
+{
+  "neural_run": "/home/rohini/Downloads/EV_GRAPH_UTILITY_PAPER_REPO/GNN_EV_FORECASTING_GPU_FULL_GRAPH_CONTROL/revision_runs/urbanev_full_9osm14my",
+  "snapshot": "/home/rohini/Downloads/EV_GRAPH_UTILITY_PAPER_REPO/GNN_EV_FORECASTING_GPU_FULL_GRAPH_CONTROL/revision_inputs/urbanev_44f2aa0c_arnem0cz",
+  "source_commit": "44f2aa0c8d89f192bce00bafb0def74a21b39c68",
+  "ridge_alpha": 1.0,
+  "intercept": "unpenalized",
+  "aggregation": "daily estimated-energy totals",
+  "normalization": "training-only daily per-node mean and standard deviation",
+  "residual": "weekly difference of standardized daily totals",
+  "predictors": "own residual at lag 1; spatial model adds row-normalized neighbor residual at lag 1",
+  "fitting": "pooled across nodes and training target days 8..125",
+  "evaluation": "validation target days 126..152 (27 days); no test-target fitting or scoring",
+  "extension": "retrospective; fixed original diagnostic, no tuning to observed neural results",
+  "caveats": [
+    "Published volume is estimated, not metered.",
+    "Upstream cleaning and bidirectional imputation predate our split.",
+    "Distance rows have no IDs; their order is assumed to match the published column order.",
+    "Only 28 daily test windows; no causal or broad geographic generalization."
+  ],
+  "evidence_sha256": {
+    "/home/rohini/Downloads/EV_GRAPH_UTILITY_PAPER_REPO/GNN_EV_FORECASTING_GPU_FULL_GRAPH_CONTROL/revision_inputs/urbanev_44f2aa0c_arnem0cz/data/volume.csv": "a55a095ce75af33c59aece2643d5d71b5cd5a0dc73bb97bc553f0a48f40ace32",
+    "/home/rohini/Downloads/EV_GRAPH_UTILITY_PAPER_REPO/GNN_EV_FORECASTING_GPU_FULL_GRAPH_CONTROL/revision_runs/urbanev_full_9osm14my/all_runs.csv": "ccc00621a8cd57d5d5054f89aa9e6365b6d16380de8f07831fad42102252cb82",
+    "/home/rohini/Downloads/EV_GRAPH_UTILITY_PAPER_REPO/GNN_EV_FORECASTING_GPU_FULL_GRAPH_CONTROL/revision_runs/urbanev_full_9osm14my/protocol.json": "8d4832cbad2c15e1d882b3bf236644559db50f05d049b928f88d14d589673710",
+    "/home/rohini/Downloads/EV_GRAPH_UTILITY_PAPER_REPO/GNN_EV_FORECASTING_GPU_FULL_GRAPH_CONTROL/revision_runs/urbanev_full_9osm14my/graph_and_scaler.npz": "fff1a6347a78fcb5d7fb4c1b0bcd18031c79872e74b37bbc5003a9e124223943"
+  }
+}

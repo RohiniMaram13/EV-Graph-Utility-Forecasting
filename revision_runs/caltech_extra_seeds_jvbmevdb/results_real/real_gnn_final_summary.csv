@@ -1,0 +1,2 @@
+n_nodes,n_real_edges,n_train_seeds,n_permutations_per_seed,gru_ft_mae_mean,gru_ft_mae_std,real_gnn_mae_mean,real_gnn_mae_std,real_gain_over_gru_ft_mean_pct,real_gain_over_gru_ft_std_pct,real_vs_mean_perm_gain_mean_pct,real_vs_mean_perm_gain_std_pct,mean_percent_permutations_beaten,real_final_gate_mean,real_final_gate_std
+16,56,2,20,0.3491691052913666,0.010161647322825061,0.33224479854106903,0.011266168708325806,4.853681334808136,0.457582111561651,-0.22908814184910423,0.17034807065161786,37.5,0.03335562162101269,0.00480655567890592

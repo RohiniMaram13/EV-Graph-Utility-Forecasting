@@ -1,0 +1,11 @@
+URBANEV RSPS (validation, 27 days; 275 zones)
+Aligned RSPS: 0.03105048
+Mean shuffled RSPS: 0.02974016
+RSPS alignment advantage: +0.00131032 (raw score difference)
+Aligned RSPS exceeds 14/20 shuffled scores
+Neural test MAE alignment gain: +0.049956% +/- 0.054612% across 3 seeds
+Exploratory Pearson r, RSPS versus mean neural test MAE across 21 graphs: -0.042642
+For that correlation, negative means higher RSPS accompanies lower neural error.
+Graphs share data and topology: no independent-sample significance claim.
+RSPS is dimensionless validation MSE reduction; neural gain is test MAE percent.
+A single geographic case cannot establish general tracking across datasets.

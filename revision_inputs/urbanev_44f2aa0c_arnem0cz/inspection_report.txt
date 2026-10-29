@@ -1,0 +1,64 @@
+UrbanEV source commit: 44f2aa0c8d89f192bce00bafb0def74a21b39c68
+Local snapshot: /home/rohini/Downloads/EV_GRAPH_UTILITY_PAPER_REPO/GNN_EV_FORECASTING_GPU_FULL_GRAPH_CONTROL/revision_inputs/urbanev_44f2aa0c_arnem0cz
+Read-only audit of published data; no model training or graph selection.
+Caution: volume is estimated energy, not directly metered energy.
+Upstream preprocessing includes imputation; document this limitation.
+
+data/volume.csv: rows=4344, columns=276
+First column names: ['time', '102', '104', '105', '106', '107', '108', '109']
+First two rows, first six columns:
+               time       102       104    105       106        107
+2022-09-01 00:00:00 56.291667 11.083333 60.375 78.750000  90.125000
+2022-09-01 01:00:00 50.458333  9.333333 72.625 81.666667 100.333333
+Missing cells: 0
+First-column timestamp parse failures: 0
+Time range: 2022-09-01 00:00:00 to 2023-02-28 23:00:00
+Duplicate timestamps: 0
+Time-step counts: {Timedelta('0 days 01:00:00'): 4343}
+Nonfinite or nonnumeric value cells: 0
+Negative value cells: 0
+Zero value cells: 65365
+
+data/duration.csv: rows=4344, columns=276
+First column names: ['time', '102', '104', '105', '106', '107', '108', '109']
+First two rows, first six columns:
+               time      102      104       105       106       107
+2022-09-01 00:00:00 8.833333 1.583333  9.166667 11.250000 13.166667
+2022-09-01 01:00:00 8.166667 1.333333 11.000000 11.666667 14.416667
+Missing cells: 0
+First-column timestamp parse failures: 0
+Time range: 2022-09-01 00:00:00 to 2023-02-28 23:00:00
+Duplicate timestamps: 0
+Time-step counts: {Timedelta('0 days 01:00:00'): 4343}
+Nonfinite or nonnumeric value cells: 0
+Negative value cells: 0
+Zero value cells: 65365
+
+data/inf.csv: rows=1362, columns=7
+First column names: ['station_id', 'longitude', 'latitude', 'charge_count', 'TAZID', 'area', 'perimeter']
+First two rows, first six columns:
+ station_id  longitude  latitude  charge_count  TAZID        area
+       1001 113.784724 22.714121            20    559 5726523.056
+       1002 113.785002 22.725900            22    558 3927542.045
+Missing cells: 0
+
+data/adj.csv: rows=275, columns=275
+First column names: ['102', '104', '105', '106', '107', '108', '109', '110']
+First two rows, first six columns:
+ 102  104  105  106  107  108
+   1    0    0    0    0    0
+   0    1    1    1    0    0
+Missing cells: 0
+
+data/distance.csv: rows=275, columns=275
+First column names: ['102', '104', '105', '106', '107', '108', '109', '110']
+First two rows, first six columns:
+        102         104         105         106         107         108
+   0.000000 1809.441169 2196.926362 1991.889627 2863.407789 3301.232155
+1809.441169    0.000000  734.061580 1274.183390 1919.472076 1804.352369
+Missing cells: 0
+
+DOWNLOAD COMPLETE. No forecasting experiment has been run.
+Next: verify node-ID alignment and geographic matrix meaning; freeze target,
+chronological splits and graph rule before any test-model evaluation.
+Keep the entire snapshot folder and its manifest for reproducibility.

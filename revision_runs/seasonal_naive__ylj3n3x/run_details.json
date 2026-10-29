@@ -1,0 +1,11 @@
+{
+  "method": "Same hour 168 hours earlier; rolling daily 24-hour forecast",
+  "units": "kWh per hourly bin (MAE and RMSE)",
+  "test_day_indices": "569 through 669, zero based",
+  "source_sha256": {
+    "real_validation/run_real_graph_validation.py": "95fa41e261f8d614a3d81af9971c808362862f59ba9618344256f53d013d1a77",
+    "experiments_v2/metrics.py": "7e385ca4395a7ccc2e4f730ba338243588f89e29457f3d088c59573b158d54e3",
+    "data/real_acn/caltech_hourly_energy.npz": "571a494160f3d46456bb33759b18331ee62a30e993f29349afa2b4c6c30d9364",
+    "data/real_acn/caltech_pod_adjacency.npy": "bcf37aa4bb5a8862f46329faf44f1432a85b100a5bb92e45b5989eb7533fcb55"
+  }
+}

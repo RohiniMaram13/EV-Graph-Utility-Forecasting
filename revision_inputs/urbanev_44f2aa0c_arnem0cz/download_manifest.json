@@ -1,0 +1,41 @@
+{
+  "repository": "https://github.com/IntelligentSystemsLab/UrbanEV",
+  "commit": "44f2aa0c8d89f192bce00bafb0def74a21b39c68",
+  "files": {
+    "readme.md": {
+      "url": "https://raw.githubusercontent.com/IntelligentSystemsLab/UrbanEV/44f2aa0c8d89f192bce00bafb0def74a21b39c68/readme.md",
+      "bytes": 13742,
+      "sha256": "3b05a73c4cb5e85492aeb655a9de5667246334ca24d7618419f1c25e91923494"
+    },
+    "LICENSE": {
+      "url": "https://raw.githubusercontent.com/IntelligentSystemsLab/UrbanEV/44f2aa0c8d89f192bce00bafb0def74a21b39c68/LICENSE",
+      "bytes": 7048,
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+    },
+    "data/volume.csv": {
+      "url": "https://raw.githubusercontent.com/IntelligentSystemsLab/UrbanEV/44f2aa0c8d89f192bce00bafb0def74a21b39c68/data/volume.csv",
+      "bytes": 16503910,
+      "sha256": "a55a095ce75af33c59aece2643d5d71b5cd5a0dc73bb97bc553f0a48f40ace32"
+    },
+    "data/duration.csv": {
+      "url": "https://raw.githubusercontent.com/IntelligentSystemsLab/UrbanEV/44f2aa0c8d89f192bce00bafb0def74a21b39c68/data/duration.csv",
+      "bytes": 17802378,
+      "sha256": "3afc79ca193267bca327b04d45b6cf24240f8c93ea94bcbb0a52cc119b8080d1"
+    },
+    "data/inf.csv": {
+      "url": "https://raw.githubusercontent.com/IntelligentSystemsLab/UrbanEV/44f2aa0c8d89f192bce00bafb0def74a21b39c68/data/inf.csv",
+      "bytes": 74446,
+      "sha256": "03c9830965e9e99b29adfb8cceed0eba98d37631f514273cb3fe61f80d63de7c"
+    },
+    "data/adj.csv": {
+      "url": "https://raw.githubusercontent.com/IntelligentSystemsLab/UrbanEV/44f2aa0c8d89f192bce00bafb0def74a21b39c68/data/adj.csv",
+      "bytes": 152420,
+      "sha256": "93100d3b042086159387ec069efbaf411b90298cdf8a7ada64de214c6bdb5c00"
+    },
+    "data/distance.csv": {
+      "url": "https://raw.githubusercontent.com/IntelligentSystemsLab/UrbanEV/44f2aa0c8d89f192bce00bafb0def74a21b39c68/data/distance.csv",
+      "bytes": 897582,
+      "sha256": "3630642ddce0e4aac440804c134f3424614ce2bd34fc7bcadd1bc1a3de0d303e"
+    }
+  }
+}

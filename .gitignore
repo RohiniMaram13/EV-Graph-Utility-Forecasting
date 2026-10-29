@@ -237,3 +237,35 @@ slurm-*.out
 #
 # Whether caltech_selected_sessions.csv should be committed depends
 # on its size and the ACN dataset redistribution terms.
+
+# ============================================================
+# CAMERA-READY REVISION EXPERIMENTS
+# ============================================================
+
+# Other local virtual environments
+.venv*/
+
+# Actual raw ACN session directory (missing from the earlier rules).
+# Ignoring does NOT untrack files already in Git history.
+/data/real_acn/timeseries_sessions/
+
+# Downloaded UrbanEV data: retain a separate local backup.
+# Keep snapshot readme, LICENSE, download_manifest.json and inspection_report.txt
+# trackable so the source version and checksums remain documented.
+/revision_inputs/*/data/
+
+# Smoke/pilot output is not final experimental evidence.
+/revision_runs/*SMOKE*/
+/revision_runs/caltech_pilot_*/
+
+# Large prediction arrays from full revision experiments.
+# CSV metrics, JSON protocols, TXT summaries and source copies remain trackable.
+/revision_runs/**/*.npz
+/revision_runs/**/*.npy
+
+# Keep the small exact geographic graph, permutations and fitted scaler.
+!/revision_runs/**/graph_and_scaler.npz
+
+# Checkpoint rules (*.pt, *.pth, *.ckpt) are already present above.
+# Do not ignore the entire revision_runs/ directory.
+# Do not add global *.csv, *.json, *.txt, *.pdf, *.tex or *.npz rules.

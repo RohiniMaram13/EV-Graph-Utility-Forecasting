@@ -1,0 +1,5 @@
+FULL STGCN RESULTS
+      aligned_mae  aligned_rmse  perm_mae_mean  perm_mae_std  alignment_gain_pct  permutations_beaten_pct
+mean     0.331638      0.806595       0.331246      0.008445           -0.113776                53.333333
+std      0.016670      0.001282       0.003293      0.002780            4.798527                47.258156
+Total minutes: 8.48

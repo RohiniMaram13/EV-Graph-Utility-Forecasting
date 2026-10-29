@@ -1,0 +1,32 @@
+{
+  "model": "DLinear shared-channel",
+  "kernel_size": 25,
+  "lookback": 168,
+  "horizon": 24,
+  "seeds": [
+    42,
+    52,
+    62
+  ],
+  "max_epochs": 100,
+  "patience": 15,
+  "batch_size": 4,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "amp": true,
+  "loss": "normalized MSE",
+  "selection": "minimum validation normalized MSE",
+  "device": "cuda",
+  "torch_version": "2.11.0+cu128",
+  "test_windows": 101,
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "source_sha256": {
+    "real_validation/run_real_graph_validation.py": "95fa41e261f8d614a3d81af9971c808362862f59ba9618344256f53d013d1a77",
+    "experiments_v2/train_eval.py": "11bdb0d5ffac04d81e823ee596148b8e1bbc4ed7c332d2477bddc0575e51b46a",
+    "experiments_v2/metrics.py": "7e385ca4395a7ccc2e4f730ba338243588f89e29457f3d088c59573b158d54e3",
+    "experiments_v2/config.py": "5dfaa2b8dff5306031ccd3d70f59323fde4dc3b5da69ceea42de660029ccd67a",
+    "experiments_v2/device_utils.py": "a1070f0d0b848ff201a35891d3a4df5bd64fe2089c5a4beda65778ac7a55b3c1",
+    "data/real_acn/caltech_hourly_energy.npz": "571a494160f3d46456bb33759b18331ee62a30e993f29349afa2b4c6c30d9364",
+    "data/real_acn/caltech_pod_adjacency.npy": "bcf37aa4bb5a8862f46329faf44f1432a85b100a5bb92e45b5989eb7533fcb55"
+  }
+}

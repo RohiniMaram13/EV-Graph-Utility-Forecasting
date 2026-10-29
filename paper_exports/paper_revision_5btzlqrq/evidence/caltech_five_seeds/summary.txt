@@ -1,0 +1,6 @@
+COMBINED FIVE SEEDS: 42, 52, 62, 72, 82
+Means and sample standard deviations; original and added runs combined.
+      gru_ft_mae  real_gnn_mae  real_gnn_rmse  real_gain_over_gru_ft_pct  real_vs_mean_perm_gain_pct  percent_permutations_beaten
+mean    0.346089      0.338716       0.806499                   2.112172                    0.629533                    54.000000
+std     0.006573      0.008242       0.003083                   2.602249                    1.947556                    24.596748
+Added-run runtime: 14.77 minutes

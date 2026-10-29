@@ -1,0 +1,2 @@
+                model        dataset  test_windows      mae     rmse     nmae        r2  peak_mae  offpeak_mae
+Weekly seasonal naive Caltech Pod-16           101 0.304991 1.122903 1.675209 -0.734823  0.898329     0.107212
